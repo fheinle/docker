@@ -103,6 +103,10 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
                         echo "installing of nextcloud failed!"
                         exit 1
                     fi
+                    if [ -n "${NEXTCLOUD_PROTOCOL_OVERRIDE+x}" ]; then
+                        echo "steting protocol override…"
+                        run_as "php /var/www/html/occ config:system:set overrideprotocol --value=${NEXTCLOUD_PROTOCOL_OVERRIDE}"
+                    fi
                     if [ -n "${NEXTCLOUD_TRUSTED_DOMAINS+x}" ]; then
                         echo "setting trusted domains…"
                         NC_TRUSTED_DOMAIN_IDX=1

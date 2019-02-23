@@ -116,6 +116,10 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
                             NC_TRUSTED_DOMAIN_IDX=$(($NC_TRUSTED_DOMAIN_IDX+1))
                         done
                     fi
+                    if [ -n "${NEXTCLOUD_OVERWRITE_PROTOCOL+x}" ]; then
+                        echo "overwriting default protocol…"
+                        run_as "php /var/www/html/occ config:system:set overwriteprotocol --value=${NEXTCLOUD_OVERWRITE_PROTOCOL}"
+                    fi
                 else
                     echo "running web-based installer on first connect!"
                 fi

@@ -103,6 +103,10 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
                         echo "installing of nextcloud failed!"
                         exit 1
                     fi
+                    if [ -n "${NEXTCLOUD_PROTOCOL_OVERRIDE+x}" ]; then
+                        echo "steting protocol override…"
+                        run_as "php /var/www/html/occ config:system:set overrideprotocol --value=${NEXTCLOUD_PROTOCOL_OVERRIDE}"
+                    fi
                     if [ -n "${NEXTCLOUD_TRUSTED_DOMAINS+x}" ]; then
                         echo "setting trusted domains…"
                         NC_TRUSTED_DOMAIN_IDX=1
@@ -111,6 +115,10 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
                             run_as "php /var/www/html/occ config:system:set trusted_domains $NC_TRUSTED_DOMAIN_IDX --value=$DOMAIN"
                             NC_TRUSTED_DOMAIN_IDX=$(($NC_TRUSTED_DOMAIN_IDX+1))
                         done
+                    fi
+                    if [ -n "${NEXTCLOUD_OVERWRITE_PROTOCOL+x}" ]; then
+                        echo "overwriting default protocol…"
+                        run_as "php /var/www/html/occ config:system:set overwriteprotocol --value=${NEXTCLOUD_OVERWRITE_PROTOCOL}"
                     fi
                 else
                     echo "running web-based installer on first connect!"
